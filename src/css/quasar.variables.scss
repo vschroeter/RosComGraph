@@ -1,0 +1,67 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+
+// $primary   : #1976D2;
+// $secondary : #26A69A;
+// $accent    : #9C27B0;
+
+$primary   : #b10433;
+$secondary : #e35510;
+$third     : #f89d06;
+
+$accent    : #4E6E58;
+
+$topic     : #B3C2F2;
+
+// $primary   : #5369FA;
+// $secondary : #C4991D;
+// $accent    : #071013;
+
+$dark      : #1D1D1D;
+$dark-page : #121212;
+
+$positive  : #21BA45;
+$negative  : #C10015;
+$info      : #31CCEC;
+$warning   : #F2C037;
+
+$border    : #000000;
+
+$test      : #123456;
+
+body.body--light {
+    --q-stroke: #000000;
+    --q-node-stroke: #FFFFFF;
+    --q-stroke-pubsub: #0d53cd;
+    --q-stroke-service: #19ce31;
+    --q-stroke-broadcast: #9e9e9e;
+    --q-detailed-node-bg: #73c5fb;
+    --q-detailed-node-stroke: #dddddd;
+    --q-detailed-node-stroke-opacity: #dddddd;
+
+    --ros-subgroup-bg: #BBBBBB;
+    --ros-group-bg: #BBBBBB;
+    --ros-node-bg: #BBBBBB;
+}
+
+body.body--dark {
+    --q-stroke: #ffffff;
+    --q-node-stroke: #ffffff;
+    --q-stroke-pubsub: #557fc8;
+    --q-stroke-service: #67cd75;
+    --q-stroke-broadcast: #9e9e9e;
+    --q-detailed-node-bg: #73c5fb;
+    --q-detailed-node-stroke: #dddddd;
+    --q-detailed-node-stroke-opacity: 1;
+}

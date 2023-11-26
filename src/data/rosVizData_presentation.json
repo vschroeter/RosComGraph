@@ -1,0 +1,108 @@
+[
+    {
+        "name": "display_left",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/hardware_interface",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/display_left",
+                "type": "Subscribers",
+                "messageType": "std_msgs/msg/Empty"
+            }
+        ]
+    },
+    {
+        "name": "display_right",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/hardware_interface",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/display_right",
+                "type": "Subscribers",
+                "messageType": "std_msgs/msg/Empty"
+            }
+        ]
+    },
+    {
+        "name": "display_bottom",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/hardware_interface",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/display_bottom",
+                "type": "Subscribers",
+                "messageType": "std_msgs/msg/Empty"
+            }
+        ]
+    },    
+    {
+        "name": "motor",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/hardware_interface",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/motor",
+                "type": "Subscribers",
+                "messageType": "std_msgs/msg/Empty"
+            }
+        ]
+    },
+    {
+        "name": "hardware_interface",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/hardware_interface",
+                "type": "Subscribers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/manager",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            }
+        ]
+    },
+    {
+        "name": "display_manager",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/display_left",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/display_right",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/display_bottom",
+                "type": "Publishers",
+                "messageType": "std_msgs/msg/Empty"
+            },
+            {
+                "name": "/manager",
+                "type": "Subscribers",
+                "messageType": "std_msgs/msg/Empty"
+            }
+        ]
+    }
+]

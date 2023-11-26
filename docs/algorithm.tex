@@ -1,0 +1,97 @@
+\begin{algorithm}
+    % \SetAlgoLined
+    \DontPrintSemicolon
+    
+    \SetKwData{This}{this}
+    \SetKwData{Up}{up}
+    \SetKwData{Left}{left}
+    \SetKwData{parentMap}{parentMap}
+    \SetKwData{currentNode}{node}
+    \SetKwData{sn}{sn}
+    \SetKwData{n}{n}
+    \SetKwData{successors}{successors}
+    \SetKwData{queue}{queue}
+    \SetKwData{s}{s}
+    \SetKwData{p}{p}
+    \SetKwData{N}{N}
+    \SetKwData{null}{null}
+    \SetKwData{ancestors}{ancestors}
+    \SetKwData{parent}{parent}
+    \SetKwData{maxGen}{maxGen}
+    \SetKwData{topoGens}{topoGens}
+    \SetKwData{topoSorting}{topoSorting}
+    \SetKwData{flowSorting}{flowSorting}
+    \SetKwData{predecessors}{predecessors}
+    \SetKwData{allParentsSorted}{allParentsSorted}
+
+
+    \SetKwInOut{Input}{input}
+    \SetKwInOut{Output}{output}
+    
+    \SetKwFunction{Union}{Union}
+    \SetKwFunction{markAsSiblings}{markAsSiblings}
+    \SetKwFunction{unvisitedNodesLeft}{unvisitedNodesLeft}
+    \SetKwFunction{getTopologicalGenerations}{getTopologicalGenerations}
+    \SetKwFunction{add}{add}
+    \SetKwFunction{remove}{remove}
+    \SetKwFunction{has}{has}
+    \SetKwFunction{Next}{next}
+    \SetKwFunction{pop}{pop}
+    \SetKwFunction{push}{push}
+    \SetKwFunction{max}{max}
+
+    \caption{Get Flow Sorting}\label{alg:getFlowSorting}
+    \Input{Set of connected nodes \N, start node \s}
+
+    \SetKwFunction{FVisit}{VisitNode}
+    \SetKwProg{Fn}{Function}{:}{}
+
+    \topoGens $\gets$ \getTopologicalGenerations{\N, \s}\;
+    \topoSorting $\gets$ \getTopologicalSorting{\topoGens}\;
+    
+    \flowSorting $\gets \emptyset$\;
+
+
+    \Fn{\FVisit{\n}}{
+        \If{$\n \notin \flowSorting$}{
+            \predecessors $\gets$ \n.predecessors\;
+
+            \eIf{$\predecessors.len == 0$}{
+                \flowSorting.\add{\n}\;
+            }{
+                \allParentsSorted $\gets$ True\;
+
+                \ForEach{$\p \in \predecessors$}{
+                    \eIf{$\p \in \flowSorting OR \p.\isSibling(\n) OR n.gen < p.gen$}{
+                        continue\;
+                    }{
+                        \allParentsSorted $\gets$ False\;
+                        break\;
+                    }
+                }
+
+                \eIf{\allParentsSorted}{
+                    \flowSorting.\add{\n}\;
+                }{
+                    continue\;
+                }
+            }
+            
+            \ForEach{$\sn \in \n.successors$}{
+                \FVisit{\sn}\;
+            }
+        }
+    }
+
+
+    \While{$\exists \n (\n \in \N \land \n \notin \flowSorting)$}{
+        \ForEach{$\n \in \topoSorting$}{
+            \FVisit{\n}\;
+        }
+    }
+
+
+    \emph{\# Get all parents of the nodes}\;
+    
+    
+\end{algorithm}

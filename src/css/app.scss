@@ -1,0 +1,159 @@
+// app global css in SCSS form
+
+.node {
+    stroke: var(--q-stroke);
+    fill: var(--q-primary);
+    stroke-width: 1px;
+    // transition: stroke-width 0.3s ease,
+    // fill 0.3s ease;
+    cursor: pointer;
+}
+
+.node-hovered {
+    // transition: stroke-width 0.1s ease
+    // fill 0.1s ease;
+
+    fill: var(--q-accent);
+    stroke-width: 2;
+}
+
+.node-hovered-adjacent {
+    // transition: fill 0.1s linear;
+    fill: var(--q-secondary);
+    // stroke-width: 2;
+}
+
+.node-selected {
+    fill: var(--q-accent);
+    stroke-width: 2;
+}
+
+
+
+.topic-header text {
+    fill: var(--q-node-stroke);
+    // mix-blend-mode: difference;
+    // mix-blend-mode: exclusion;
+}
+
+.topic-header rect {
+    fill: $primary;
+    stroke: var(--q-node-stroke);
+    stroke-width: 0.5;
+    rx: 5;
+    ry: 5;
+}
+
+.topic-group-header text {
+    fill: var(--q-node-stroke);
+    // mix-blend-mode: difference;
+}
+
+.topic-group-header rect {
+    fill: $secondary;
+    stroke: var(--q-node-stroke);
+    stroke-width: 0.5;
+    rx: 3;
+    ry: 3;
+}
+
+.topic-subgroup-header text {
+    fill: var(--q-node-stroke);
+    // fill: white;
+    mix-blend-mode: difference;
+}
+
+
+.topic-subgroup-header rect {
+    fill: $third;
+    stroke: var(--q-node-stroke);
+    stroke-width: 0.5;
+    rx: 1;
+    ry: 1;
+}
+
+.topic-publishers,
+.topic-subscribers,
+.topic-services,
+.topic-clients {
+    text {
+        // fill: var(--q-node-stroke);
+        fill: black;
+        // mix-blend-mode: difference;
+    }
+
+    rect {
+        fill: $topic;
+        stroke: var(--q-node-stroke);
+        stroke-width: 0.2;
+        fill-opacity: 0.6;
+        rx: 1;
+        ry: 1;
+    }
+}
+
+.topic-publishers.selected,
+.topic-subscribers.selected,
+.topic-services.selected,
+.topic-clients.selected {
+    text {
+        // fill: var(--q-node-stroke);
+        fill: black;
+        // mix-blend-mode: difference;
+    }
+
+    rect {
+        fill: darken($topic, 10%);
+        // stroke: var(--q-node-stroke);
+        stroke: var(--q-accent);
+        stroke-width: 1;
+        fill-opacity: 0.6;
+        rx: 1;
+        ry: 1;
+    }
+}
+
+.topic-publishers.deselected,
+.topic-subscribers.deselected,
+.topic-services.deselected,
+.topic-clients.deselected {
+    text {
+        // fill: var(--q-node-stroke);
+        fill: black;
+        opacity: 0.3;
+        // mix-blend-mode: difference;
+    }
+
+    rect {
+        fill: $topic;
+        opacity: 0.3;
+        stroke: var(--q-node-stroke);
+        stroke-width: 0.2;
+        fill-opacity: 0.6;
+        rx: 1;
+        ry: 1;
+    }
+}
+
+
+
+.subgroup-bg {
+    fill: var(--ros-subgroup-bg);
+    stroke: var(--q-node-stroke);
+    stroke-width: 0.5;
+    fill-opacity: 0.2;
+}
+
+.group-bg {
+    fill: var(--ros-group-bg);
+    stroke: var(--q-node-stroke);
+    stroke-width: 0.5;
+    fill-opacity: 0.2;
+}
+
+.node-bg {
+    fill: var(--ros-node-bg);
+    stroke: var(--q-node-stroke);
+    stroke-width: 0.5;
+    fill-opacity: 0.2;
+}
