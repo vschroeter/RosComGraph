@@ -159,7 +159,7 @@ const props = withDefaults(defineProps<{
     strokeWidthBroadcast: 0.5,
     outerRadius: 300,
     maxInnerRadiusFactor: 0.8,
-    minInnerRadiusFactor: -0.5,
+    minInnerRadiusFactor: -0.5,//-0.5,
     maxOuterRadiusFactor: 2.9,
     minOuterRadiusFactor: 1.4,
     startAngleOffset: -90,
@@ -421,7 +421,8 @@ const connectionLines = computed(() => {
     // The maximum distance is reached when the connection line bridges a node, thus at nodesGapAngle.value * 2. 
 
     const angleForMaxDistance = nodesGapAngle.value * 2
-    const angleForMinDistance = 180
+    // const angleForMaxDistance = 0
+    const angleForMinDistance = 180 - nodesGapAngle.value * 0.5
     const angleRange = angleForMinDistance - angleForMaxDistance
 
     const minInnerRadius = _outerRadius.value * props.minInnerRadiusFactor
@@ -471,10 +472,11 @@ const connectionLines = computed(() => {
 
                         //const deltaAngle = deltaAngleRaw <= 180 ? deltaAngleRaw : deltaAngleRaw - 360
                         let deltaAngle = deltaAngleRaw
+                        let deltaAngleNormalized = deltaAngleRaw
 
-                        if (deltaAngleRaw <= -180) deltaAngle = deltaAngleRaw + 360
-                        else if (deltaAngleRaw > -180 && deltaAngleRaw <= 180) deltaAngle = deltaAngleRaw
-                        else deltaAngle = deltaAngleRaw - 360
+                        if (deltaAngleRaw <= -180) deltaAngleNormalized = deltaAngleRaw + 360
+                        else if (deltaAngleRaw > -180 && deltaAngleRaw <= 180) deltaAngleNormalized = deltaAngleRaw
+                        else deltaAngleNormalized = deltaAngleRaw - 360
 
                         // const cDeltaAngle = getCircularDistance(startAngle, endAngle, 360) // does not return negative values
 
@@ -483,6 +485,8 @@ const connectionLines = computed(() => {
                         const deltaAngleAbs = Math.abs(deltaAngle)
 
                         let isOuterCircle = deltaAngle < 0
+
+
 
                         let radius = _outerRadius.value
                         let indexNode = nodesSortedByAngle.value.indexOf(node)
@@ -500,10 +504,30 @@ const connectionLines = computed(() => {
                         } else {
                             const angleDistanceFrom180 = Math.abs(180 - deltaAngleAbs)
 
-                            const angleOverMaxAngle = Math.max(0, deltaAngleAbs - angleForMaxDistance)
+                            // const angleOverMaxAngle = Math.max(0, deltaAngleAbs - angleForMaxDistance)
+                            const angleOverMaxAngle = Math.max(0, Math.abs(deltaAngleNormalized) - angleForMaxDistance)
 
                             const distanceRangeFactor = (angleRange - angleOverMaxAngle) / angleRange
 
+
+                            // if (node.node.name == "respeaker" && targetNode.name == "status_visualizer_led" && (props.hiddenNodes?.size ?? 0) > 0) {
+                            //     const table = {
+                            //         // [console.log("Angles:", startAngle, endAngle, deltaAngleRaw, deltaAngle, deltaAngleAbs, midAngle, isOuterCircle)]
+                            //         "start": startAngle,
+                            //         "end": endAngle,
+                            //         "deltaRaw": deltaAngleRaw,
+                            //         "deltaAngleNormalized": deltaAngleNormalized,
+                            //         "delta": deltaAngle,
+                            //         "deltaAbs": deltaAngleAbs,
+                            //         "mid": midAngle,
+                            //         "isOuter": isOuterCircle,
+                            //         "angleRange": angleRange,
+                            //         "angleDistanceFrom180": angleDistanceFrom180,
+                            //         "angleOverMaxAngle": angleOverMaxAngle,
+                            //         "distanceRangeFactor": distanceRangeFactor,
+                            //     }
+                            //     console.table(table)
+                            // }
 
                             if (!isOuterCircle) {
                                 // radius = minInnerRadius + innerRadiusRange * distanceRangeFactor
