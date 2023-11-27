@@ -1,15 +1,22 @@
 import { RouteRecordRaw } from 'vue-router';
 
+import MainPageVue from 'pages/MainPage.vue';
+import MainLayoutVue from 'layouts/MainLayout.vue';
+import MainLeftDrawerVue from 'pages/MainLeftDrawer.vue';
+import MainRightDrawerVue from 'pages/MainRightDrawer.vue';
+import ErrorNotFoundVue from 'pages/ErrorNotFound.vue';
+
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: MainLayoutVue,
     children: [{
       path: '', components: {
         // default: () => import('pages/IndexPage.vue'),
-        default: () => import('pages/MainPage.vue'),
-        LeftSidebarContent: () => import('pages/MainLeftDrawer.vue'),
-        RightSidebarContent: () => import('pages/MainRightDrawer.vue'),
+        default: MainPageVue,
+        LeftSidebarContent: MainLeftDrawerVue,
+        RightSidebarContent: MainRightDrawerVue,
       }
     }],
   },
@@ -18,7 +25,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue'),
+    component: ErrorNotFoundVue,
   },
 ];
 
