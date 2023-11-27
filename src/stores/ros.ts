@@ -19,6 +19,7 @@ export const useRosStore = defineStore('ros', {
         autoUpdates: useStorage("autoUpdates", true as boolean),
         update: 0 as number,
         nodes: Array<ROS.Node>(),
+        hiddenNodes: useStorage("hiddenNodes", new Set() as Set<string>), // new Set() as Set<string>,
         nodeSorting: useStorage("nodeSorting", "flow" as SortingMethod) as unknown as SortingMethod,
         selectedNode: null as ROS.Node | null,
         selectedSecondaryNode: null as ROS.Node | null,

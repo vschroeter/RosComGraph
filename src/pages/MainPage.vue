@@ -20,7 +20,8 @@
       <svg v-if="true" ref="refMainSvg" :width="svgWidth - 2" :height="svgHeight - 10" :viewBox="viewBox">
         <g :ref="interactiveRef.ref">
           <CircularView v-if="true && selectedView == 'CV'" ref="refCV" :nodes="rosStore.nodes"
-            :graph-sorting="rosStore.nodeSorting" :start-angle-offset="angleOffset" :selectedNode="rosStore.selectedNode?.key"
+            :graph-sorting="rosStore.nodeSorting" :start-angle-offset="angleOffset"
+            :selectedNode="rosStore.selectedNode?.key"
             :hovered-node="rosStore.hoveredNode?.key" @dblclicked-node="(n) => goToDetailedView(n)"
             :outer-radius="50 + rosStore.nodes.length * 15"
             @selectedNode="(n) => selectNode(n)"
@@ -30,8 +31,10 @@
             :show-service-client-connections="rosStore.showServiceClientConnections"
             :use-service-connections="rosStore.componentsUseServiceClientConnections"
             :use-pub-sub-connections="rosStore.componentsUsePubSubConnections"
-            :use-broadcast-connections="rosStore.componentsUseBroadcastConnections" />
-          <DAG v-if="true && selectedView == 'DAG'" ref="refDAG" :nodes="rosStore.nodes" :graph-sorting="rosStore.nodeSorting"
+            :use-broadcast-connections="rosStore.componentsUseBroadcastConnections"
+            :hidden-nodes="rosStore.hiddenNodes" />
+          <DAG v-if="true && selectedView == 'DAG'" ref="refDAG" :nodes="rosStore.nodes"
+            :graph-sorting="rosStore.nodeSorting"
             :start-angle-offset="angleOffset" :selectedNode="rosStore.selectedNode?.key"
             :hovered-node="rosStore.hoveredNode?.key" @dblclicked-node="(n) => goToDetailedView(n)"
             @selectedNode="(n) => rosStore.selectedNode = (rosStore.selectedNode?.key != n ? rosStore.getNode(n) : null)!"
@@ -43,8 +46,9 @@
             :use-pub-sub-connections="rosStore.componentsUsePubSubConnections"
             :use-broadcast-connections="rosStore.componentsUseBroadcastConnections" />
           <FlowView v-if="true && selectedView == 'FLOW'" ref="refFlow" :nodes="rosStore.nodes"
-            :graph-sorting="rosStore.nodeSorting" :start-angle-offset="angleOffset" :selectedNode="rosStore.selectedNode?.key"
-            :hovered-node="rosStore.hoveredNode?.key" 
+            :graph-sorting="rosStore.nodeSorting" :start-angle-offset="angleOffset"
+            :selectedNode="rosStore.selectedNode?.key"
+            :hovered-node="rosStore.hoveredNode?.key"
             :secondary-node="rosStore.selectedSecondaryNode?.key"
             :selected-topic="rosStore.selectedTopic"
             @selectedNode="(n) => selectNode(n)"
@@ -112,7 +116,7 @@
         <span>Broadcast connection</span>
       </div>
     </div>
-    
+
 
   </q-page>
 </template>
@@ -166,7 +170,7 @@ const bBox = computed(() => {
 const viewBox = useViewBoxGetter(() => bBox.value, 30, 0.5, 20, true)
 
 
-const angleOffset = ref(-90)
+const angleOffset = ref(-180)
 
 
 function goToDetailedView(nodeKey: string) {

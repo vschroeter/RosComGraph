@@ -98,6 +98,9 @@ const props = withDefaults(defineProps<{
     /** List of nodes to visualize */
     nodes: ROS.Node[],
 
+    /** List of nodes to hide */
+    hiddenNodes?: Set<string>,
+
     /** Selected node displayed in the circular view */
     selectedNode?: string,
     /** Hovered node displayed in the circular view */
@@ -275,9 +278,20 @@ function getAnchor(node: RGr.RosGraphNode | ROS.Node | string, position: Point2D
 // Graph data
 ////////////////////////////////////////////////////////////////////////////
 
+const visibleNodes = computed(() => {
+    const nodes = new Array<ROS.Node>()
+    const hidden = props.hiddenNodes ?? new Set<string>()
+    for (const node of props.nodes) {
+        if (!hidden.has(node.key)) {
+            nodes.push(node)
+        }
+    }
+    return Array.from(nodes)
+})
+
 /** Graph Data from the nodes */
 const graphData = computed(() => {
-    return new RGr.RosGraphData(props.nodes)
+    return new RGr.RosGraphData(visibleNodes.value)
 })
 
 /** Graph node mapping */
@@ -307,7 +321,8 @@ const countConnectedComponents = computed(() => connectionComponents.value.lengt
 const startAngle = ref(0)
 
 // const restAngle = computed(() => 360 - props.circleGap)
-const restAngle = computed(() => (connectionComponents.value.length > 1 ? 360 : 270) - props.circleGap)
+// const restAngle = computed(() => (connectionComponents.value.length > 1 ? 360 : 270) - props.circleGap)
+const restAngle = computed(() => (connectionComponents.value.length > 1 ? 360 : 360) - props.circleGap)
 
 /**
  * The angle between two nodes of the same connected component
@@ -318,7 +333,11 @@ const nodesGapAngle = computed(() => {
     // with connectedGapAngle = nodesGapAngle * connectedGapFactor
     // > restAngle = (countNodes) * nodesGapAngle + (countConnectedComponents) * nodesGapAngle * connectedGapFactor
     // > nodesGapAngle = restAngle / (countNodes + (countConnectedComponents) * connectedGapFactor)
-    return restAngle.value / (countNodes.value + (countConnectedComponents.value) * props.connectedGapFactor)
+    console.log(restAngle.value, countNodes.value, countConnectedComponents.value, props.connectedGapFactor, connectionComponents.value)
+    const gapFac = countConnectedComponents.value > 1 ? props.connectedGapFactor : 1
+    const val = restAngle.value / (countNodes.value + (countConnectedComponents.value) * gapFac);
+    // return Math.min(val, 22.5)
+    return val
 })
 
 /**
@@ -463,7 +482,7 @@ const connectionLines = computed(() => {
 
                         const deltaAngleAbs = Math.abs(deltaAngle)
 
-                        let isOuterCircle = deltaAngle < 0 
+                        let isOuterCircle = deltaAngle < 0
 
                         let radius = _outerRadius.value
                         let indexNode = nodesSortedByAngle.value.indexOf(node)
@@ -580,7 +599,7 @@ const connectionLines = computed(() => {
 
 onMounted(() => {
     // console.log("Mounted Circular View")
-    
+
     watch([() => props.circleGap, () => props.startAngleOffset], () => {
         // console.log("Update start angle")
         const duration = 0

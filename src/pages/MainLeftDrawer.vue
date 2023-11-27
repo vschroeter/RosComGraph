@@ -169,8 +169,12 @@
 
         </div>
 
+        <q-separator inset />
 
-
+        <div class="col-auto q-mx-lg q-my-sm">
+            <p class="text-center">Visible Nodes</p>
+            <NodeList />
+        </div>
 
     </q-page>
 </template>
@@ -180,6 +184,7 @@ import { computed, ref, toRef, watch } from 'vue';
 
 import ForceDirectedGraph from 'src/components/svg/overview/ForceDirectedGraph.vue';
 import CircularView from 'src/components/svg/overview/CircularView.vue';
+import NodeList from 'src/components/NodeList.vue';
 import { useRosStore } from 'stores/ros'
 import { svgInteractiveRef, useViewBoxGetter } from 'src/components/svg/scripts/directives';
 import { useStorage } from '@vueuse/core';
