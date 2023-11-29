@@ -12,25 +12,32 @@
                         <q-btn icon="refresh" color="secondary" outline @click="rosStore.update++" />
                         <q-btn-dropdown color="secondary" :label="rosStore.visMode" rounded>
                             <q-list>
-                                <q-item clickable v-close-popup @click="rosStore.setVisMode('Show live data')">
+                                <q-item clickable v-close-popup @click="setVisMode('Show live data', true)">
                                     <q-item-section>
                                         <q-item-label>Show live data</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
-                                <q-item clickable v-close-popup @click="rosStore.setVisMode('Show saved data (8)')">
+                                <q-item clickable v-close-popup @click="setVisMode('Show saved data (8)', false)">
                                     <q-item-section>
                                         <q-item-label>Show saved data from 8 nodes</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
-                                <q-item clickable v-close-popup @click="rosStore.setVisMode('Show saved data (21)')">
+                                <q-item clickable v-close-popup @click="setVisMode('Show saved data (21)', false)">
                                     <q-item-section>
                                         <q-item-label>Show saved data from 21 nodes</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
-                                <q-item clickable v-close-popup @click="rosStore.setVisMode('Show presentation data')">
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Show saved data (a lot of nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Show saved data from a lot nodes</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup @click="setVisMode('Show presentation data', false)">
                                     <q-item-section>
                                         <q-item-label>Show presentation nodes</q-item-label>
                                     </q-item-section>
@@ -176,6 +183,13 @@
             <NodeList />
         </div>
 
+        <q-separator inset />
+
+        <div class="col-auto q-mx-lg q-my-sm">
+            <p class="text-center">Circular View Settings</p>
+            <CircleViewSettings />
+        </div>
+
     </q-page>
 </template>
 
@@ -185,6 +199,7 @@ import { computed, ref, toRef, watch } from 'vue';
 import ForceDirectedGraph from 'src/components/svg/overview/ForceDirectedGraph.vue';
 import CircularView from 'src/components/svg/overview/CircularView.vue';
 import NodeList from 'src/components/NodeList.vue';
+import CircleViewSettings from 'src/components/CircleViewSettings.vue';
 import { useRosStore } from 'stores/ros'
 import { svgInteractiveRef, useViewBoxGetter } from 'src/components/svg/scripts/directives';
 import { useStorage } from '@vueuse/core';
@@ -268,14 +283,10 @@ const sortingOptions = [
 
 const showWsInput = ref(false);
 
-watch(rosStore.visMode, () => {
-    if (rosStore.visMode == "Show live data") {
-        showWsInput.value = false;
-    } else {
-        showWsInput.value = true;
-    }
-    // showWsInput.value = 
-})
+function setVisMode(mode: string, showWs: boolean = false) {
+    rosStore.visMode = mode;
+    showWsInput.value = showWs;
+}
 
 </script>
 

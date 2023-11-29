@@ -333,7 +333,7 @@ const nodesGapAngle = computed(() => {
     // with connectedGapAngle = nodesGapAngle * connectedGapFactor
     // > restAngle = (countNodes) * nodesGapAngle + (countConnectedComponents) * nodesGapAngle * connectedGapFactor
     // > nodesGapAngle = restAngle / (countNodes + (countConnectedComponents) * connectedGapFactor)
-    console.log(restAngle.value, countNodes.value, countConnectedComponents.value, props.connectedGapFactor, connectionComponents.value)
+    // console.log(restAngle.value, countNodes.value, countConnectedComponents.value, props.connectedGapFactor, connectionComponents.value)
     const gapFac = countConnectedComponents.value > 1 ? props.connectedGapFactor : 1
     const val = restAngle.value / (countNodes.value + (countConnectedComponents.value) * gapFac);
     // return Math.min(val, 22.5)

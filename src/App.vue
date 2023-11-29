@@ -12,6 +12,7 @@ import { useRosStore } from 'stores/ros'
 
 import jsonNodes8 from 'src/data/rosVizData_8_nodes.json'
 import jsonNodes21 from 'src/data/rosVizData_21_nodes.json'
+import jsonNodesMany from 'src/data/rosVizData_many_nodes.json'
 import rosVizData_presentation from 'src/data/rosVizData_presentation.json'
 import { computed, ref, watch } from 'vue'
 
@@ -188,6 +189,8 @@ watch([() => rosStore.visMode, () => rosStore.update, () => rosInfo], () => {
     rosStore.nodes = ROS.getSimulatedNodes(jsonNodes21);
   } else if (rosStore.visMode === 'Show presentation data') {
     rosStore.nodes = ROS.getSimulatedNodes(rosVizData_presentation);
+  } else if (rosStore.visMode === 'Show saved data (a lot of nodes)') {
+    rosStore.nodes = ROS.getSimulatedNodes(jsonNodesMany);
   }
 }, { immediate: true })
 

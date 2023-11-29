@@ -1,7 +1,9 @@
 <template>
     <g>
         <circle :cx="_cx" :cy="_cy" :r="r * 1.5" fill="none" stroke="none" pointer-events="all" />
-        <circle :cx="_cx" :cy="_cy" :r="radius" :class="styleClass" />
+        <circle :cx="_cx" :cy="_cy" :r="radius" :class="styleClass" fill-opacity="1" />
+        <circle :cx="_cx" :cy="_cy" :r="radius" stroke="none" :fill="overlayColor" style="mix-blend-mode: normal;"
+            opacity="0.8" />
         <text
             :transform="`translate(${cx}, ${cy}) rotate(${textAngle}) translate(${textXTranslation}, ${0}) `"
             :x="0" :y="0"
@@ -15,6 +17,7 @@
 
 <script setup lang="ts">
 import gsap from 'gsap';
+import * as d3 from 'd3'
 
 import { Point2D, Transformation, useObjectAnchor } from "src/components/svg/composables/anchor";
 import { useNodeAnchorStore } from "src/stores/nodeAnchors";
@@ -62,6 +65,11 @@ const _cx = ref(props.cx)
 const _cy = ref(props.cy)
 const _r = ref(props.r)
 
+// const sourceScoreNorm = computed(() => (props.node.sourceScore + 1) / 2)
+const sourceScoreNorm = computed(() => (props.node.sourceScorePubSub + 1) / 2)
+const overlayColor = computed(() => d3.interpolateRdBu(sourceScoreNorm.value))
+
+
 watch([() => props.cx, () => props.cy, () => props.r], () => {
     // const duration = 0.5
     // gsap.to(_cx, { duration: duration, value: props.cx })
@@ -107,7 +115,7 @@ const textAngle = computed(() => {
     if (textOnRightSide.value) {
         if (normAngle.value <= 180) return normAngle.value / angleFraction
         else return (normAngle.value - 360) / angleFraction
-    } 
+    }
     else return (normAngle.value - 180) / angleFraction
 })
 

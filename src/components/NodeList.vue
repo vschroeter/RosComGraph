@@ -95,7 +95,7 @@ const componentTree = computed(() => {
 
         const componentNode = {
             key: `component-${i}`,
-            label: `Component ${i}`,
+            label: `Component ${i} (${component.length} nodes)`,
             children: [] as any[]
         }
 

@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { RosSystemInfo } from 'src/ros/rosSystemInfo'
 
-type visMode = "Show live data" | "Show saved data (8)" | "Show saved data (21)" | "Show presentation data"
+type visMode = "Show live data" | "Show saved data (8)" | "Show saved data (21)" | "Show saved data (a lot of nodes)" | "Show presentation data"
 
 let topicTimeout: NodeJS.Timeout | null = null;
 

@@ -20,7 +20,7 @@
       <svg v-if="true" ref="refMainSvg" :width="svgWidth - 2" :height="svgHeight - 10" :viewBox="viewBox">
         <g :ref="interactiveRef.ref">
           <CircularView v-if="true && selectedView == 'CV'" ref="refCV" :nodes="rosStore.nodes"
-            :graph-sorting="rosStore.nodeSorting" :start-angle-offset="angleOffset"
+            :graph-sorting="rosStore.nodeSorting"
             :selectedNode="rosStore.selectedNode?.key"
             :hovered-node="rosStore.hoveredNode?.key" @dblclicked-node="(n) => goToDetailedView(n)"
             :outer-radius="50 + rosStore.nodes.length * 15"
@@ -32,7 +32,17 @@
             :use-service-connections="rosStore.componentsUseServiceClientConnections"
             :use-pub-sub-connections="rosStore.componentsUsePubSubConnections"
             :use-broadcast-connections="rosStore.componentsUseBroadcastConnections"
-            :hidden-nodes="rosStore.hiddenNodes" />
+            :hidden-nodes="rosStore.hiddenNodes"
+            :stroke-width-pub-sub="visStore.strokeWidthPubSub"
+            :stroke-width-service="visStore.strokeWidthService"
+            :stroke-width-broadcast="visStore.strokeWidthBroadcast"
+            :max-inner-radius-factor="visStore.maxInnerRadiusFactor"
+            :min-inner-radius-factor="visStore.minInnerRadiusFactor"
+            :max-outer-radius-factor="visStore.maxOuterRadiusFactor"
+            :min-outer-radius-factor="visStore.minOuterRadiusFactor"
+            :start-angle-offset="visStore.startAngleOffset"
+            :circle-gap="visStore.circleGap"
+            :connected-gap-factor="visStore.connectedGapFactor" />
           <DAG v-if="true && selectedView == 'DAG'" ref="refDAG" :nodes="rosStore.nodes"
             :graph-sorting="rosStore.nodeSorting"
             :start-angle-offset="angleOffset" :selectedNode="rosStore.selectedNode?.key"
@@ -129,8 +139,12 @@ import { Ref, computed, nextTick, ref, watch } from 'vue';
 import { useRosStore } from 'stores/ros'
 import { useViewBoxGetter, svgInteractiveRef } from 'src/components/svg/scripts/directives';
 import { useResizeObserver, useStorage } from '@vueuse/core'
+import { useVisualSettingsStore } from 'src/stores/visualSettings';
+
 
 const rosStore = useRosStore()
+const visStore = useVisualSettingsStore()
+
 
 const refDivSvgParent = ref<HTMLDivElement | null>(null)
 
