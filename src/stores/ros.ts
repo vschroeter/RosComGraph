@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { RosSystemInfo } from 'src/ros/rosSystemInfo'
 
-type visMode = "Show live data" | "Show saved data (8)" | "Show saved data (21)" | "Show saved data (a lot of nodes)" | "Show presentation data"
+type visMode = "Show live data" | "Saved data (Table Robot | 8 nodes)" | "Saved data (Table Robot | 21 nodes)" | "Saved data (Table Robot | 26 nodes)" | "Show presentation data" | "Example data (Autonomous Driving derived from Autoware | 13 nodes)" | "Example data (Self-driving car | 7 nodes)"
 
 let topicTimeout: NodeJS.Timeout | null = null;
 
@@ -133,7 +133,7 @@ export const useRosStore = defineStore('ros', {
                 this.visibleSubgroups.delete(subgroupPrefix)
             } else {
                 this.visibleSubgroups.add(subgroupPrefix)
-            }        
+            }
         }
 
 

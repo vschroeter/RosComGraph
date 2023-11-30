@@ -4,7 +4,6 @@
             Test
         </q-card> -->
         <div class="col-auto q-ma-md self-center">
-
             <p class="text-center">Displayed data</p>
             <div class="row justify-center">
                 <div class="col-auto q-ma-sm">
@@ -18,30 +17,47 @@
                                     </q-item-section>
                                 </q-item>
 
-                                <q-item clickable v-close-popup @click="setVisMode('Show saved data (8)', false)">
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Saved data (Table Robot | 8 nodes)', false)">
                                     <q-item-section>
-                                        <q-item-label>Show saved data from 8 nodes</q-item-label>
-                                    </q-item-section>
-                                </q-item>
-
-                                <q-item clickable v-close-popup @click="setVisMode('Show saved data (21)', false)">
-                                    <q-item-section>
-                                        <q-item-label>Show saved data from 21 nodes</q-item-label>
+                                        <q-item-label>Saved data (Table Robot | 8 nodes)</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
                                 <q-item clickable v-close-popup
-                                    @click="setVisMode('Show saved data (a lot of nodes)', false)">
+                                    @click="setVisMode('Saved data (Table Robot | 21 nodes)', false)">
                                     <q-item-section>
-                                        <q-item-label>Show saved data from a lot nodes</q-item-label>
+                                        <q-item-label>Saved data (Table Robot | 21 nodes)</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
-                                <q-item clickable v-close-popup @click="setVisMode('Show presentation data', false)">
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Saved data (Table Robot | 26 nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Saved data (Table Robot | 26 nodes)</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Example data (Autonomous Driving derived from Autoware | 13 nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Example data (Autonomous Driving derived from Autoware | 13
+                                            nodes)</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Example data (Self-driving car | 7 nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Example data (Self-driving car | 7 nodes)</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <!-- <q-item clickable v-close-popup @click="setVisMode('Show presentation data', false)">
                                     <q-item-section>
                                         <q-item-label>Show presentation nodes</q-item-label>
                                     </q-item-section>
-                                </q-item>
+                                </q-item> -->
 
                             </q-list>
                         </q-btn-dropdown>
@@ -278,7 +294,10 @@ const sortingOptions = [
     { label: 'Flow Sorting', value: 'flow', tooltip: 'Our proposed sorting approach to optimize visualization of global dataflow and minimize edge distances.' },
     { label: 'Topological Sorting', value: 'topological', tooltip: 'Topological sorting based on our approach to calculate topological generations.' },
     { label: 'Breadth First Sorting', value: 'breadth-first', tooltip: 'Breadth first sorting of the communication graph.' },
+    { label: 'Breadth First Sorting (forward edges)', value: 'breadth-first-forward', tooltip: 'Breadth first sorting of the communication graph (considering forward edges before backward edges).' },
     { label: 'Depth First Sorting', value: 'depth-first', tooltip: 'Depth first sorting of the communication graph.' },
+    { label: 'Depth First Sorting (forward edges)', value: 'depth-first-forward', tooltip: 'Depth first sorting of the communication graph (considering forward edges before backward edges).' },
+
 ]
 
 const showWsInput = ref(false);

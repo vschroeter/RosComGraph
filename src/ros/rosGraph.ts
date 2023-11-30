@@ -2,7 +2,8 @@ import createGraph, { type Graph, type Link } from 'ngraph.graph'
 import * as ROS from 'src/ros/rosNode'
 import { Ref, computed, ref, toValue } from 'vue'
 
-export type SortingMethod = "topological" | "flow" | "breadth-first" | "depth-first"
+export type SortingMethod = "topological" | "flow" | "breadth-first" | "breadth-first-forward" | "depth-first" | "depth-first-forward"
+
 
 export interface GraphLayoutNode {
   id: string
@@ -319,7 +320,7 @@ export class RosNodeGraph {
    * @param nodes If given, use these nodes to calculate the generations instead of the connected component of the given start node
    * @returns The topological generations for the sub graph that the given node belongs to
    */
-    getTopologicalGenerations(startNode?: RosGraphNode, includePubSubConnections = true, includeServiceConnections = false, includeBroadcastConnections = true, nodes?: RosGraphNode[]): RosNodeGraphGeneration[] {
+  getTopologicalGenerations(startNode?: RosGraphNode, includePubSubConnections = true, includeServiceConnections = false, includeBroadcastConnections = true, nodes?: RosGraphNode[]): RosNodeGraphGeneration[] {
 
     // Get the connection component that this node belongs to or use the given nodes
     // const component = nodes ?? this.getConnectedComponent(startNode, includeServiceConnections)
@@ -509,7 +510,7 @@ export class RosNodeGraph {
 
 
     const adaptedGenerationList = Array.from(adaptedGenerations.values()).sort((a, b) => a.generation - b.generation)
-    
+
     return adaptedGenerationList
   }
 
@@ -660,7 +661,9 @@ export class RosNodeGraph {
       if (sorting == "topological") nodes = this.getTopologicalSorting(startNode, includePubSubConnections, includeServiceConnections, includeBroadcastConnections)
       else if (sorting == "flow") nodes = this.getFlowSorting(startNode, includePubSubConnections, includeServiceConnections, includeBroadcastConnections)
       else if (sorting == "breadth-first") nodes = this.getBreadthFirstSearch(startNode, includePubSubConnections, includeServiceConnections, includeBroadcastConnections)
+      else if (sorting == "breadth-first-forward") nodes = this.getBreadthFirstSearch(startNode, includePubSubConnections, includeServiceConnections, includeBroadcastConnections, false)
       else if (sorting == "depth-first") nodes = this.getDepthFirstSearch(startNode, includePubSubConnections, includeServiceConnections, includeBroadcastConnections)
+      else if (sorting == "depth-first-forward") nodes = this.getDepthFirstSearch(startNode, includePubSubConnections, includeServiceConnections, includeBroadcastConnections, false)
 
       if (nodes == undefined) throw new Error("Unknown sorting type")
 
@@ -681,7 +684,7 @@ export class RosNodeGraph {
     const broadCastFilterList = from.broadCastTopics.map(topic => new RegExp(topic.name));
     const filteredLinks: Link<InternalRosLinkData>[] = []
 
-    
+
     if (outgoingPubLinks) {
       if (includePubSubConnections) {
         outgoingPubLinks.forEach(link => {
@@ -710,16 +713,34 @@ export class RosNodeGraph {
   /**
    * Breadth-first search to find all nodes that are connected to the given node.
    */
-  getBreadthFirstSearch(startNode: RosGraphNode, includePubSubConnections = true, includeServiceConnections = false, includeBroadcastConnections = false): RosGraphNode[] {
+  getBreadthFirstSearch(startNode: RosGraphNode, includePubSubConnections = true, includeServiceConnections = false, includeBroadcastConnections = false, includeBackwardEdges = true): RosGraphNode[] {
     const visited = new Set<RosGraphNode>()
-    const queue = [startNode]
-    
-    while (queue.length > 0) {
-      const node = queue.shift()!
-      if (visited.has(node)) continue
-      visited.add(node)
-      queue.push(...this.getSuccessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections))
-      queue.push(...this.getPredecessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections))
+
+    if (includeBackwardEdges) {
+      const queue = [startNode]
+
+      while (queue.length > 0) {
+        const node = queue.shift()!
+        if (visited.has(node)) continue
+        visited.add(node)
+        queue.push(...this.getSuccessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections))
+        queue.push(...this.getPredecessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections))
+      }
+    } else {
+
+      const queue = new Array<RosGraphNode>()
+      const backwardQueue = [startNode]
+
+      while (backwardQueue.length > 0) {
+        queue.push(backwardQueue.shift()!)
+        while (queue.length > 0) {
+          const node = queue.shift()!
+          if (visited.has(node)) continue
+          visited.add(node)
+          queue.push(...this.getSuccessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections))
+          backwardQueue.push(...this.getPredecessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections))
+        }
+      }
     }
     return Array.from(visited)
   }
@@ -727,9 +748,8 @@ export class RosNodeGraph {
   /**
    * Depth-first search to find all nodes that are connected to the given node.
    */
-  getDepthFirstSearch(startNode: RosGraphNode, includePubSubConnections = true, includeServiceConnections = false, includeBroadcastConnections = false): RosGraphNode[] {
+  getDepthFirstSearch(startNode: RosGraphNode, includePubSubConnections = true, includeServiceConnections = false, includeBroadcastConnections = false, includeBackwardEdges = true): RosGraphNode[] {
     const visited = new Set<RosGraphNode>()
-    
     const visit = (node: RosGraphNode) => {
       if (visited.has(node)) return
       visited.add(node)
@@ -737,10 +757,28 @@ export class RosNodeGraph {
       this.getPredecessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections).forEach(visit)
     }
     visit(startNode);
+
+    if (!includeBackwardEdges) {
+      const lenNodes = visited.size
+      visited.clear()
+
+      const queue = new Array<RosGraphNode>()
+      queue.push(startNode)
+
+      const visitForward = (node: RosGraphNode) => {
+        if (visited.has(node)) return
+        visited.add(node)
+        this.getSuccessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections).forEach(visitForward)
+        queue.push(...(this.getPredecessorNodes(node, includePubSubConnections, includeServiceConnections, includeBroadcastConnections)))
+      }
+
+      while (visited.size < lenNodes) {
+        visitForward(queue.shift()!)
+      }
+
+    }
     return Array.from(visited);
   }
-
-
 }
 
 
@@ -921,4 +959,193 @@ export class RosGraphData {
     const layout = new RosGraphLayout(Array.from(nodes.values()), links)
     return layout
   }
+}
+
+
+
+export class SortingEvaluation {
+  graph: RosNodeGraph
+  sorting: RosGraphNode[]
+
+  countNodes: Ref<number> = ref(0)
+  countLinksTotal: Ref<number> = ref(0)
+  countBroadcastLinks: Ref<number> = ref(0)
+  countPubSubLinks: Ref<number> = ref(0)
+  countServiceLinks: Ref<number> = ref(0)
+
+  countForwardLinksTotal: Ref<number> = ref(0)
+  countForwardLinksBroadcast: Ref<number> = ref(0)
+  countForwardLinksPubSub: Ref<number> = ref(0)
+  countForwardLinksService: Ref<number> = ref(0)
+
+  countBackwardLinksTotal: Ref<number> = ref(0)
+  countBackwardLinksBroadcast: Ref<number> = ref(0)
+  countBackwardLinksPubSub: Ref<number> = ref(0)
+  countBackwardLinksService: Ref<number> = ref(0)
+
+  totalEdgeLength: Ref<number> = ref(0)
+
+  totalEdgeLengthForward: Ref<number> = ref(0)
+  totalEdgeLengthForwardBroadcast: Ref<number> = ref(0)
+  totalEdgeLengthForwardPubSub: Ref<number> = ref(0)
+  totalEdgeLengthForwardService: Ref<number> = ref(0)
+
+  totalEdgeLengthBackward: Ref<number> = ref(0)
+  totalEdgeLengthBackwardBroadcast: Ref<number> = ref(0)
+  totalEdgeLengthBackwardPubSub: Ref<number> = ref(0)
+  totalEdgeLengthBackwardService: Ref<number> = ref(0)
+
+  totalEdgeCrossings: Ref<number> = ref(0)
+
+  constructor(graph: RosNodeGraph, sorting: RosGraphNode[]) {
+    this.graph = graph
+    this.sorting = sorting
+
+    this.countNodes.value = sorting.length
+  }
+
+  logTable() {
+    // Every key value pair of the object
+    const entries = Object.entries(this)
+    var obj = {}
+    entries.forEach(entry => {
+
+      obj[entry[0]] = entry[1].value
+    })
+    console.table(obj)
+
+  }
+
+  calculate() {
+
+    const sortingMap = new Map<string, number>()
+    this.sorting.forEach((node, index) => {
+      sortingMap.set(node.node.key, index)
+    })
+
+
+    const nodeLinksPubSub = new Map<number, Array<number>>()
+    const nodeLinksService = new Map<number, Array<number>>()
+    const nodeLinksBroadcast = new Map<number, Array<number>>()
+
+    this.sorting.forEach((nodeName, index) => {
+      const node = this.graph._nodeNameMap.get(nodeName.node.key)!
+
+      const successorsPubSub = this.graph.getSuccessorNodes(node, true, false, false)
+      const successorsService = this.graph.getSuccessorNodes(node, false, true, false)
+      const successorsBroadcast = this.graph.getSuccessorNodes(node, false, false, true)
+
+      const successorsPubSubIndex = successorsPubSub.map(s => sortingMap.get(s.node.key)!)
+      const successorsServiceIndex = successorsService.map(s => sortingMap.get(s.node.key)!)
+      const successorsBroadcastIndex = successorsBroadcast.map(s => sortingMap.get(s.node.key)!)
+
+      nodeLinksPubSub.set(index, successorsPubSubIndex)
+      nodeLinksService.set(index, successorsServiceIndex)
+      nodeLinksBroadcast.set(index, successorsBroadcastIndex)
+
+      this.countPubSubLinks.value += successorsPubSub.length
+      this.countServiceLinks.value += successorsService.length
+      this.countBroadcastLinks.value += successorsBroadcast.length
+    })
+
+    this.countLinksTotal.value = this.countPubSubLinks.value + this.countServiceLinks.value // + this.countBroadcastLinks.value
+
+    console.log(sortingMap)
+    console.log(nodeLinksPubSub, nodeLinksService, nodeLinksBroadcast)
+
+    // Forward links == if the successor is after the current node
+    // Backward links == if the successor is before the current node
+
+    const linksList = [
+      {
+        nodeLinks: nodeLinksPubSub,
+        countForward: this.countForwardLinksPubSub,
+        countBackward: this.countBackwardLinksPubSub,
+        totalEdgeLengthForward: this.totalEdgeLengthForwardPubSub,
+        totalEdgeLengthBackward: this.totalEdgeLengthBackwardPubSub
+      },
+      {
+        nodeLinks: nodeLinksService,
+        countForward: this.countForwardLinksService,
+        countBackward: this.countBackwardLinksService,
+        totalEdgeLengthForward: this.totalEdgeLengthForwardService,
+        totalEdgeLengthBackward: this.totalEdgeLengthBackwardService
+      },
+      {
+        nodeLinks: nodeLinksBroadcast,
+        countForward: this.countForwardLinksBroadcast,
+        countBackward: this.countBackwardLinksBroadcast,
+        totalEdgeLengthForward: this.totalEdgeLengthForwardBroadcast,
+        totalEdgeLengthBackward: this.totalEdgeLengthBackwardBroadcast
+      },
+    ];
+
+    linksList.forEach((obj) => {
+      const nodeLinks = obj.nodeLinks
+      const countForward = obj.countForward
+      const countBackward = obj.countBackward
+      const totalEdgeLengthForward = obj.totalEdgeLengthForward
+      const totalEdgeLengthBackward = obj.totalEdgeLengthBackward
+
+      nodeLinks.forEach((successors, nodeIndex) => {
+        successors.forEach(successorIndex => {
+          if (successorIndex > nodeIndex) {
+            countForward.value++;
+            totalEdgeLengthForward.value += successorIndex - nodeIndex;
+          } else if (successorIndex < nodeIndex) {
+            countBackward.value++;
+            totalEdgeLengthBackward.value += nodeIndex - successorIndex;
+          }
+        })
+      })
+    })
+
+
+    this.countForwardLinksTotal.value = this.countForwardLinksPubSub.value + this.countForwardLinksService.value // + this.countForwardLinksBroadcast.value
+    this.countBackwardLinksTotal.value = this.countBackwardLinksPubSub.value + this.countBackwardLinksService.value // + this.countBackwardLinksBroadcast.value
+    this.totalEdgeLengthBackward.value = this.totalEdgeLengthBackwardPubSub.value + this.totalEdgeLengthBackwardService.value // + this.totalEdgeLengthBackwardBroadcast.value
+    this.totalEdgeLengthForward.value = this.totalEdgeLengthForwardPubSub.value + this.totalEdgeLengthForwardService.value // + this.totalEdgeLengthForwardBroadcast.value
+    this.totalEdgeLength.value = this.totalEdgeLengthBackward.value + this.totalEdgeLengthForward.value;
+
+    this.countLinksTotal.value = this.countForwardLinksTotal.value + this.countBackwardLinksTotal.value;
+
+
+    // Edge crossings --> iterate each edge and check if it crosses another edge:
+    // Edge1 = (e1_start, e1_end)
+    // Edge2 = (e2_start, e2_end)
+    // 1) (e1_start < e2_start && e1_start < e1_end) && (e1_end > e2_start && e1_end < e2_end) --> crossing
+    // 2) (e2_start > e1_start && e2_start < e1_end) && (e2_end > e1_start && e2_end > e1_end) --> crossing 
+
+    [nodeLinksPubSub, nodeLinksService].forEach(e1_links => {
+      e1_links.forEach((successors, e1_start) => {
+        successors.forEach(e1_end => {
+          [nodeLinksPubSub, nodeLinksService].forEach(e2_links => {
+            e2_links.forEach((successors, e2_start) => {
+              successors.forEach(e2_end => {
+
+                const bla = this.totalEdgeCrossings.value
+                if (e1_start < e1_end && e2_start < e2_end) {
+                  if ((e1_start < e2_start && e1_start < e1_end) && (e1_end > e2_start && e1_end < e2_end)) this.totalEdgeCrossings.value++;
+                  else if ((e2_start > e1_start && e2_start < e1_end) && (e2_end > e1_start && e2_end > e1_end)) this.totalEdgeCrossings.value++;
+
+                } else if (e1_start > e1_end && e2_start > e2_end) {
+                  if ((-e1_start < -e2_start && -e1_start < -e1_end) && (-e1_end > -e2_start && -e1_end < -e2_end)) this.totalEdgeCrossings.value++;
+                  else if ((-e2_start > -e1_start && -e2_start < -e1_end) && (-e2_end > -e1_start && -e2_end > -e1_end)) this.totalEdgeCrossings.value++;
+                }
+
+                if (bla != this.totalEdgeCrossings.value) {
+                  console.log("CROSSING", e1_start, e1_end, e2_start, e2_end)
+                }
+
+              })
+            })
+          })
+        })
+      });
+    });
+
+
+    this.logTable();
+  }
+
 }

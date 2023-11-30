@@ -313,6 +313,16 @@ const countNodes = computed(() => graphNodes.value.length)
 /** The number of connected components */
 const countConnectedComponents = computed(() => connectionComponents.value.length)
 
+watch(() => connectionComponents.value, () => {
+    console.log("Update eval")
+    const nodeSorting = new Array<RGr.RosGraphNode>()
+    connectionComponents.value.forEach(component => {
+        nodeSorting.push(...component)
+    });
+    const evaluation = new RGr.SortingEvaluation(nodeGraph.value, nodeSorting)
+    evaluation.calculate()
+}, { immediate: true })
+
 ////////////////////////////////////////////////////////////////////////////
 // Visual calculations
 ////////////////////////////////////////////////////////////////////////////
@@ -337,6 +347,7 @@ const nodesGapAngle = computed(() => {
     const gapFac = countConnectedComponents.value > 1 ? props.connectedGapFactor : 1
     const val = restAngle.value / (countNodes.value + (countConnectedComponents.value) * gapFac);
     // return Math.min(val, 22.5)
+
     return val
 })
 
@@ -347,8 +358,8 @@ const connectedGapAngle = computed(() => nodesGapAngle.value * props.connectedGa
 
 /** Mapping node keys to the assigned angle in the circle */
 const angleMap: Ref<Map<string, Ref<number>>> = ref(new Map());
-watch([() => connectionComponents.value], () => {
-    // console.log("Update angle map")
+watch([() => connectionComponents.value, () => connectedGapAngle.value, () => startAngle.value], () => {
+    console.log("Update angle map")
 
     const newAngleMap = new Map<string, Ref<number>>()
     const angleChangeValue = ref(0)
@@ -422,7 +433,7 @@ const connectionLines = computed(() => {
 
     const angleForMaxDistance = nodesGapAngle.value * 2
     // const angleForMaxDistance = 0
-    const angleForMinDistance = 180 - nodesGapAngle.value * 0.5
+    const angleForMinDistance = restAngle.value / 2 - nodesGapAngle.value * 0.5
     const angleRange = angleForMinDistance - angleForMaxDistance
 
     const minInnerRadius = _outerRadius.value * props.minInnerRadiusFactor

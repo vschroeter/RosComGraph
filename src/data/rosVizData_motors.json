@@ -1,0 +1,240 @@
+[
+    {
+        "name": "ultra_sonic_sensor",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/ultrasonic/distance",
+                "type": "Publishers",
+                "messageType": "sensor_msgs/msg/Distance"
+            }
+        ]
+    },
+    {
+        "name": "camera",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/camera/image_raw",
+                "type": "Publishers",
+                "messageType": "camera_msgs/msg/Image"
+            },
+            {
+                "name": "/camera/store_image",
+                "type": "Services",
+                "messageType": "camera_msgs/srv/ImageStore"
+            }
+        ]
+    },
+    {
+        "name": "image_preprocessor",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/camera/image_raw",
+                "type": "Subscribers",
+                "messageType": "camera_msgs/msg/Image"
+            },
+            {
+                "name": "/image/preprocessed",
+                "type": "Publishers",
+                "messageType": "camera_msgs/msg/Image"
+            }
+        ]
+    },
+    {
+        "name": "floor_sensor",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/floor_sensor/raw_value",
+                "type": "Publishers",
+                "messageType": "sensor_msgs/msg/Distance"
+            }
+        ]
+    },
+    {
+        "name": "obstacle_detector",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/ultrasonic/distance",
+                "type": "Subscribers",
+                "messageType": "sensor_msgs/msg/Distance"
+            },
+            {
+                "name": "/image/preprocessed",
+                "type": "Subscribers",
+                "messageType": "camera_msgs/msg/Image"
+            },
+            {
+                "name": "/obstacle/detected",
+                "type": "Publishers",
+                "messageType": "obstacle_detector/msg/Obstacle"
+            }
+        ]
+    },
+    {
+        "name": "route_planner",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/route/plan",
+                "type": "Publishers",
+                "messageType": "route_planner/msg/Route"
+            }
+        ]
+    },
+    {
+        "name": "drive_manager",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/floor_sensor/raw_value",
+                "type": "Subscribers",
+                "messageType": "sensor_msgs/msg/Distance"
+            },
+            {
+                "name": "/obstacle/detected",
+                "type": "Subscribers",
+                "messageType": "obstacle_detector/msg/Obstacle"
+            },
+            {
+                "name": "/route/plan",
+                "type": "Subscribers",
+                "messageType": "route_planner/msg/Route"
+            },
+            {
+                "name": "/motors/right/set_target",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/left/set_target",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/camera/store_image",
+                "type": "Clients",
+                "messageType": "camera_msgs/srv/ImageStore"
+            }
+        ]
+    },
+    {
+        "name": "right_motor_monitoring",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/motors/right/position",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/right/speed",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Speed"
+            },
+            {
+                "name": "/motors/right/hardware/temperature",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Temperature"
+            }
+        ]
+    },
+    {
+        "name": "right_motor_controller",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/motors/right/set_target",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/right/hardware/set_speed",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Speed"
+            },
+            {
+                "name": "/motors/right/position",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/right/speed",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Speed"
+            }
+        ]
+    },
+    {
+        "name": "right_motor_hardware_interface",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/motors/right/hardware/set_speed",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Speed"
+            }
+        ]
+    },
+    {
+        "name": "left_motor_monitoring",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/motors/left/position",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/left/speed",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Speed"
+            },
+            {
+                "name": "/motors/left/hardware/temperature",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Temperature"
+            }
+        ]
+    },
+    {
+        "name": "left_motor_controller",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/motors/left/set_target",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/left/hardware/set_speed",
+                "type": "Publishers",
+                "messageType": "motors_msgs/msg/Speed"
+            },
+            {
+                "name": "/motors/left/position",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Position"
+            },
+            {
+                "name": "/motors/left/speed",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Speed"
+            }
+        ]
+    },
+    {
+        "name": "left_motor_hardware_interface",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/motors/left/hardware/set_speed",
+                "type": "Subscribers",
+                "messageType": "motors_msgs/msg/Speed"
+            }
+        ]
+    }
+]

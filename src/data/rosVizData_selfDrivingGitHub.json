@@ -1,0 +1,189 @@
+[
+    {
+        "name": "car_simulator",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/image_color",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/current_pose",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/current_velocity",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/dbw_enabled",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/brake_cmd",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/steering_cmd",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/throttle_cmd",
+                "type": "Subscribers",
+                "messageType": ""
+            }
+        ]
+    },
+    {
+        "name": "obstacle_detection",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/image_color",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/current_pose",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/obstacle_waypoint",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/base_waypoints",
+                "type": "Subscribers",
+                "messageType": ""
+            }
+        ]
+    },
+    {
+        "name": "traffic_light_detection",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/image_color",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/current_pose",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/base_waypoints",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/traffic_waypoint",
+                "type": "Publishers",
+                "messageType": ""
+            }
+        ]
+    },
+    {
+        "name": "waypoint_loader",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/base_waypoints",
+                "type": "Publishers",
+                "messageType": ""
+            }
+        ]
+    },
+    {
+        "name": "waypoint_updater",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/current_pose",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/obstacle_waypoint",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/base_waypoints",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/traffic_waypoint",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/final_waypoints",
+                "type": "Publishers",
+                "messageType": ""
+            }
+        ]
+    },
+    {
+        "name": "waypoint_follower",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/final_waypoints",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/twist_cmd",
+                "type": "Publishers",
+                "messageType": ""
+            }
+        ]
+    },
+    {
+        "name": "drive_controller",
+        "namespace": "/",
+        "topics": [
+            {
+                "name": "/current_velocity",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/dbw_enabled",
+                "type": "Subscribers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/brake_cmd",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/steering_cmd",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/vehicle/throttle_cmd",
+                "type": "Publishers",
+                "messageType": ""
+            },
+            {
+                "name": "/twist_cmd",
+                "type": "Subscribers",
+                "messageType": ""
+            }
+        ]
+    }
+]

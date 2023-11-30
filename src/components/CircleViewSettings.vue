@@ -120,6 +120,15 @@ const sliders = ref<Slider[]>([
         value: toRef(visStore, "minOuterRadiusFactor"),
         label: "Min Outer Radius Factor",
         tickFormatter: (value: number) => `${value}`,
+    },
+
+    {
+        min: 0,
+        max: 359,
+        step: 1,
+        value: toRef(visStore, "circleGap"),
+        label: "Circle Gap",
+        tickFormatter: (value: number) => `${value}`,
     }
 ])
 

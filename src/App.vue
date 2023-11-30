@@ -14,6 +14,8 @@ import jsonNodes8 from 'src/data/rosVizData_8_nodes.json'
 import jsonNodes21 from 'src/data/rosVizData_21_nodes.json'
 import jsonNodesMany from 'src/data/rosVizData_many_nodes.json'
 import rosVizData_presentation from 'src/data/rosVizData_presentation.json'
+import rosVizData_motors from 'src/data/rosVizData_motors.json'
+import rosVizData_selfDrivingGitHub from 'src/data/rosVizData_selfDrivingGitHub.json'
 import { computed, ref, watch } from 'vue'
 
 
@@ -84,7 +86,7 @@ watch([() => rosStore.wsUrl], () => {
   rosStore.visMode = 'Show live data'
 }, { immediate: false })
 
-// rosStore.visMode = 'Show saved data (8)'
+// rosStore.visMode = 'Saved data (Table Robot | 8 nodes)'
 
 function fetchLiveData(): Promise<ROS.Node[]> {
   return new Promise((resolve, reject) => {
@@ -161,8 +163,8 @@ function updateLiveData() {
     }
   }).catch((err) => {
     console.warn("INITIATE SIMULATED NODES", err)
-    if (rosStore.visMode != "Show saved data (8)") {
-      rosStore.visMode = "Show saved data (8)"
+    if (rosStore.visMode != "Saved data (Table Robot | 8 nodes)") {
+      rosStore.visMode = "Saved data (Table Robot | 8 nodes)"
       const simNodes = ROS.getSimulatedNodes(jsonNodes8); // jsonNodes21
 
       rosStore.nodes = simNodes;
@@ -183,14 +185,18 @@ watch([() => rosStore.visMode, () => rosStore.update, () => rosInfo], () => {
     verboseUpdate = true;
     updateLiveData();
 
-  } else if (rosStore.visMode === 'Show saved data (8)') {
+  } else if (rosStore.visMode === 'Saved data (Table Robot | 8 nodes)') {
     rosStore.nodes = ROS.getSimulatedNodes(jsonNodes8);
-  } else if (rosStore.visMode === 'Show saved data (21)') {
+  } else if (rosStore.visMode === 'Saved data (Table Robot | 21 nodes)') {
     rosStore.nodes = ROS.getSimulatedNodes(jsonNodes21);
   } else if (rosStore.visMode === 'Show presentation data') {
     rosStore.nodes = ROS.getSimulatedNodes(rosVizData_presentation);
-  } else if (rosStore.visMode === 'Show saved data (a lot of nodes)') {
+  } else if (rosStore.visMode === 'Saved data (Table Robot | 26 nodes)') {
     rosStore.nodes = ROS.getSimulatedNodes(jsonNodesMany);
+  } else if (rosStore.visMode === 'Example data (Autonomous Driving derived from Autoware | 13 nodes)') {
+    rosStore.nodes = ROS.getSimulatedNodes(rosVizData_motors);
+  } else if (rosStore.visMode === 'Example data (Self-driving car | 7 nodes)') {
+    rosStore.nodes = ROS.getSimulatedNodes(rosVizData_selfDrivingGitHub);
   }
 }, { immediate: true })
 
