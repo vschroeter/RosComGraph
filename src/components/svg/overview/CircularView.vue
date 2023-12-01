@@ -313,15 +313,15 @@ const countNodes = computed(() => graphNodes.value.length)
 /** The number of connected components */
 const countConnectedComponents = computed(() => connectionComponents.value.length)
 
-watch(() => connectionComponents.value, () => {
-    console.log("Update eval")
-    const nodeSorting = new Array<RGr.RosGraphNode>()
-    connectionComponents.value.forEach(component => {
-        nodeSorting.push(...component)
-    });
-    const evaluation = new RGr.SortingEvaluation(nodeGraph.value, nodeSorting)
-    evaluation.calculate()
-}, { immediate: true })
+// watch(() => connectionComponents.value, () => {
+//     console.log("Update eval")
+//     const nodeSorting = new Array<RGr.RosGraphNode>()
+//     connectionComponents.value.forEach(component => {
+//         nodeSorting.push(...component)
+//     });
+//     const evaluation = new RGr.SortingEvaluation(nodeGraph.value, nodeSorting)
+//     evaluation.calculate()
+// }, { immediate: true })
 
 ////////////////////////////////////////////////////////////////////////////
 // Visual calculations
@@ -386,7 +386,8 @@ watch([() => connectionComponents.value, () => connectedGapAngle.value, () => st
 
     angleMap.value = newAngleMap
 
-    // console.log("angleMap", angleMap.value)
+    // angleMap.value.map((v, k) => [k, v.value])
+    // console.table(Array.from(angleMap.value.entries()).map(([k, v]) => [k, v.value]))
 }, { immediate: true })
 
 const nodesSortedByAngle = computed(() => {
@@ -433,7 +434,7 @@ const connectionLines = computed(() => {
 
     const angleForMaxDistance = nodesGapAngle.value * 2
     // const angleForMaxDistance = 0
-    const angleForMinDistance = restAngle.value / 2 - nodesGapAngle.value * 0.5
+    const angleForMinDistance = restAngle.value - nodesGapAngle.value * 0.5
     const angleRange = angleForMinDistance - angleForMaxDistance
 
     const minInnerRadius = _outerRadius.value * props.minInnerRadiusFactor
@@ -502,7 +503,11 @@ const connectionLines = computed(() => {
                         let radius = _outerRadius.value
                         let indexNode = nodesSortedByAngle.value.indexOf(node)
                         let indexTargetNode = nodesSortedByAngle.value.indexOf(nodeGraph.value._nodeMap.get(targetNode)!)
-                        let indexDistance = getCircularDistance(indexNode, indexTargetNode, countNodes.value)
+                        // let indexDistance = getCircularDistance(indexNode, indexTargetNode, countNodes.value)
+                        let indexDistance = Math.abs(indexNode - indexTargetNode)
+
+
+
                         if (indexDistance == 1) {
                             const isDoubleLine = nodeGraph.value._nodeMap.get(targetNode)!.successorNodes.includes(node.node) || (props.showBroadcastConnections && element.type === "Broadcast")
                             let doubleLineDistance = isDoubleLine ? distanceBetween2Nodes / 5 : 0
@@ -521,13 +526,17 @@ const connectionLines = computed(() => {
                             const distanceRangeFactor = (angleRange - angleOverMaxAngle) / angleRange
 
 
-                            // if (node.node.name == "respeaker" && targetNode.name == "status_visualizer_led" && (props.hiddenNodes?.size ?? 0) > 0) {
+                            // if (node.node.name == "display_eye_left" && targetNode.name == "i2c_bridge_node") {
                             //     const table = {
                             //         // [console.log("Angles:", startAngle, endAngle, deltaAngleRaw, deltaAngle, deltaAngleAbs, midAngle, isOuterCircle)]
                             //         "start": startAngle,
                             //         "end": endAngle,
                             //         "deltaRaw": deltaAngleRaw,
                             //         "deltaAngleNormalized": deltaAngleNormalized,
+                            //         "angleForMaxDistance": angleForMaxDistance,
+                            //         "angleForMinDistance": angleForMinDistance,
+                            //         "nodesGapAngle": nodesGapAngle.value,
+                            //         "restAngle": restAngle.value,
                             //         "delta": deltaAngle,
                             //         "deltaAbs": deltaAngleAbs,
                             //         "mid": midAngle,
