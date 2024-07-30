@@ -18,6 +18,13 @@
                                 </q-item>
 
                                 <q-item clickable v-close-popup
+                                    @click="setVisMode('Uploaded data', false)">
+                                    <q-item-section>
+                                        <q-item-label>Uploaded data</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup
                                     @click="setVisMode('Saved data (Table Robot | 8 nodes)', false)">
                                     <q-item-section>
                                         <q-item-label>Saved data (Table Robot | 8 nodes)</q-item-label>
@@ -62,9 +69,17 @@
                             </q-list>
                         </q-btn-dropdown>
                     </q-btn-group>
-                </div>
-                <div class="col-auto q-ma-sm self-center">
-                    <q-btn color="primary" label="Download as JSON" rounded @click="downloadJson()" />
+
+                    <div class="row justify-center">
+                        <!-- QFile to upload a json file -->
+                        <div class="col-auto q-ma-sm self-center">
+                            <q-file v-model="uploadedFile" label="Upload JSON file" color="primary" accept=".json" />
+                        </div>
+                        <div class="col-auto q-ma-sm self-center">
+                            <q-btn color="primary" label="Download as JSON" rounded @click="downloadJson()" />
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,7 +107,8 @@
                         @hoveredNode="(n) => rosStore.hoveredNode = (n ? rosStore.getNode(n)! : null)" />
 
                     <CircularView v-if="true" ref="refCV" :nodes="rosStore.nodes" name="LeftCV" :outer-radius="150"
-                        :graph-sorting="'flow'" :start-angle-offset="-90" :strokeWidthPubSub="4" :stroke-width-service="3"
+                        :graph-sorting="'flow'" :start-angle-offset="-90" :strokeWidthPubSub="4"
+                        :stroke-width-service="3"
                         :marker-width="2" :marker-height="2" :selectedNode="rosStore.selectedNode?.key"
                         :hovered-node="rosStore.hoveredNode?.key"
                         @selectedNode="(n) => rosStore.selectedNode = (rosStore.selectedNode?.key != n ? rosStore.getNode(n) : null)!"
@@ -143,7 +159,8 @@
                 </q-item-section>
                 <q-item-section>
                     <q-item-label>Show broadcast connections</q-item-label>
-                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes and subscribes to
+                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes and subscribes
+                        to
                         simultaneously.</q-item-label>
                 </q-item-section>
             </q-item>
@@ -177,7 +194,8 @@
                 </q-item-section>
                 <q-item-section>
                     <q-item-label>Use broadcast connections for connected components</q-item-label>
-                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes and subscribes to
+                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes and subscribes
+                        to
                         simultaneously.</q-item-label>
                 </q-item-section>
             </q-item>
@@ -231,6 +249,7 @@ const refCV = ref<InstanceType<typeof CircularView> | null>(null)
 const viewBox = useViewBoxGetter(() => refCV.value?.bBox)
 // const viewBox = useViewBoxGetter(() => refFDG.value?.bBox)
 
+
 function downloadJson() {
 
     // create simplified data from nodes
@@ -256,6 +275,28 @@ function downloadJson() {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
 }
+
+////////////////////////////////////////////////////////////////////////////
+// Upload JSON file
+////////////////////////////////////////////////////////////////////////////
+
+const uploadedFile = ref<File | null>(null)
+const uploadedData = ref<any>(null)
+
+watch(uploadedFile, (file) => {
+    if (file) {
+        // console.log("Uploaded file", file)
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = JSON.parse(e.target?.result as string)
+            // console.log("Uploaded data", data)
+            rosStore.visMode = "Uploaded data"
+            rosStore.visJsonData = data
+            uploadedData.value = data
+        }
+        reader.readAsText(file)
+    }
+})
 
 
 const topicFilter = ref<string>("")
@@ -305,6 +346,10 @@ const showWsInput = ref(false);
 function setVisMode(mode: string, showWs: boolean = false) {
     rosStore.visMode = mode;
     showWsInput.value = showWs;
+
+    if (mode == "Uploaded data") {
+        if (uploadedData.value) rosStore.visJsonData = uploadedData.value;
+    }
 }
 
 </script>

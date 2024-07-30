@@ -242,6 +242,10 @@ export function getSimulatedNodes(data: {
 } | undefined = undefined): Node[] {
 
   if (data) {
+    // console.log("DATA", data)
+    if (!data.nodes) {
+      return []
+    }
     return data.nodes.map(node => {
 
       let topics: Topic[] = []

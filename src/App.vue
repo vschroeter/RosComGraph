@@ -186,17 +186,29 @@ watch([() => rosStore.visMode, () => rosStore.update, () => rosInfo], () => {
     updateLiveData();
 
   } else if (rosStore.visMode === 'Saved data (Table Robot | 8 nodes)') {
-    rosStore.nodes = ROS.getSimulatedNodes(jsonNodes8);
+    // rosStore.nodes = ROS.getSimulatedNodes(jsonNodes8);
+    rosStore.visJsonData = jsonNodes8;
   } else if (rosStore.visMode === 'Saved data (Table Robot | 21 nodes)') {
-    rosStore.nodes = ROS.getSimulatedNodes(jsonNodes21);
+    // rosStore.nodes = ROS.getSimulatedNodes(jsonNodes21);
+    rosStore.visJsonData = jsonNodes21;
   } else if (rosStore.visMode === 'Show presentation data') {
-    rosStore.nodes = ROS.getSimulatedNodes(rosVizData_presentation);
+    // rosStore.nodes = ROS.getSimulatedNodes(rosVizData_presentation);
+    rosStore.visJsonData = rosVizData_presentation;
   } else if (rosStore.visMode === 'Saved data (Table Robot | 26 nodes)') {
-    rosStore.nodes = ROS.getSimulatedNodes(jsonNodesMany);
+    // rosStore.nodes = ROS.getSimulatedNodes(jsonNodesMany);
+    rosStore.visJsonData = jsonNodesMany;
   } else if (rosStore.visMode === 'Example data (Autonomous Driving derived from Autoware | 13 nodes)') {
-    rosStore.nodes = ROS.getSimulatedNodes(rosVizData_motors);
+    // rosStore.nodes = ROS.getSimulatedNodes(rosVizData_motors);
+    rosStore.visJsonData = rosVizData_motors;
   } else if (rosStore.visMode === 'Example data (Self-driving car | 7 nodes)') {
-    rosStore.nodes = ROS.getSimulatedNodes(rosVizData_selfDrivingGitHub);
+    // rosStore.nodes = ROS.getSimulatedNodes(rosVizData_selfDrivingGitHub);
+    rosStore.visJsonData = rosVizData_selfDrivingGitHub;
+  }
+}, { immediate: true })
+
+watch(() => rosStore.visJsonData, () => {
+  if (rosStore.visJsonData) {
+    rosStore.nodes = ROS.getSimulatedNodes(rosStore.visJsonData);
   }
 }, { immediate: true })
 

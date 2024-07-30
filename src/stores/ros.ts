@@ -7,7 +7,7 @@ import { computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { RosSystemInfo } from 'src/ros/rosSystemInfo'
 
-type visMode = "Show live data" | "Saved data (Table Robot | 8 nodes)" | "Saved data (Table Robot | 21 nodes)" | "Saved data (Table Robot | 26 nodes)" | "Show presentation data" | "Example data (Autonomous Driving derived from Autoware | 13 nodes)" | "Example data (Self-driving car | 7 nodes)"
+type visMode = "Show live data" | "Uploaded Data" | "Saved data (Table Robot | 8 nodes)" | "Saved data (Table Robot | 21 nodes)" | "Saved data (Table Robot | 26 nodes)" | "Show presentation data" | "Example data (Autonomous Driving derived from Autoware | 13 nodes)" | "Example data (Self-driving car | 7 nodes)"
 
 let topicTimeout: NodeJS.Timeout | null = null;
 
@@ -16,6 +16,7 @@ export const useRosStore = defineStore('ros', {
         systemInfoConnection: null as RosSystemInfo | null,
         // visMode: useStorage("visMode", "Show live data") as visMode,
         visMode: useStorage("visMode", "Show live data" as visMode),
+        visJsonData: useStorage("visJsonData", null as any),
         autoUpdates: useStorage("autoUpdates", true as boolean),
         update: 0 as number,
         nodes: Array<ROS.Node>(),
