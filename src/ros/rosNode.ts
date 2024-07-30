@@ -213,18 +213,51 @@ export class Node {
 
 
 export function getSimulatedNodes(data: {
+  version: string,
   name: string,
-  namespace: string,
-  topics: {
+  description: string,
+  created_at: string,
+  node_count: number,
+  nodes: {
     name: string,
-    type: string, // "Publishers" | "Subscribers" | "Services" | "Clients"
-    messageType: string,
+    namespace: string,
+    localhost_only: boolean,
+    publishers: {
+      name: string,
+      type: string
+    }[],
+    subscribers: {
+      name: string,
+      type: string
+    }[],
+    services: {
+      name: string,
+      type: string
+    }[],
+    clients: {
+      name: string,
+      type: string
+    }[]
   }[]
-}[] | undefined = undefined): Node[] {
+} | undefined = undefined): Node[] {
 
   if (data) {
-    return data.map(node => {
-      const topics = node.topics.map(topic => new Topic(topic.name, topic.type, topic.messageType))
+    return data.nodes.map(node => {
+
+      let topics: Topic[] = []
+      node.publishers.forEach(publisher => {
+        topics.push(new Topic(publisher.name, 'Publishers', publisher.type))
+      })
+      node.subscribers.forEach(subscriber => {
+        topics.push(new Topic(subscriber.name, 'Subscribers', subscriber.type))
+      })
+      node.services.forEach(service => {
+        topics.push(new Topic(service.name, 'Services', service.type))
+      })
+      node.clients.forEach(client => {
+        topics.push(new Topic(client.name, 'Clients', client.type))
+      })
+
       return new Node({
         name: node.name,
         namespace: node.namespace,

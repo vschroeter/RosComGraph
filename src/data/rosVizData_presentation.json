@@ -1,108 +1,131 @@
-[
-    {
-        "name": "display_left",
-        "namespace": "/",
-        "topics": [
-            {
-                "name": "/hardware_interface",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/display_left",
-                "type": "Subscribers",
-                "messageType": "std_msgs/msg/Empty"
-            }
-        ]
-    },
-    {
-        "name": "display_right",
-        "namespace": "/",
-        "topics": [
-            {
-                "name": "/hardware_interface",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/display_right",
-                "type": "Subscribers",
-                "messageType": "std_msgs/msg/Empty"
-            }
-        ]
-    },
-    {
-        "name": "display_bottom",
-        "namespace": "/",
-        "topics": [
-            {
-                "name": "/hardware_interface",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/display_bottom",
-                "type": "Subscribers",
-                "messageType": "std_msgs/msg/Empty"
-            }
-        ]
-    },    
-    {
-        "name": "motor",
-        "namespace": "/",
-        "topics": [
-            {
-                "name": "/hardware_interface",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/motor",
-                "type": "Subscribers",
-                "messageType": "std_msgs/msg/Empty"
-            }
-        ]
-    },
-    {
-        "name": "hardware_interface",
-        "namespace": "/",
-        "topics": [
-            {
-                "name": "/hardware_interface",
-                "type": "Subscribers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/manager",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            }
-        ]
-    },
-    {
-        "name": "display_manager",
-        "namespace": "/",
-        "topics": [
-            {
-                "name": "/display_left",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/display_right",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/display_bottom",
-                "type": "Publishers",
-                "messageType": "std_msgs/msg/Empty"
-            },
-            {
-                "name": "/manager",
-                "type": "Subscribers",
-                "messageType": "std_msgs/msg/Empty"
-            }
-        ]
-    }
-]
+{
+    "version": "1.0.0",
+    "name": "rosVizData_presentation",
+    "description": "",
+    "created_at": "2023-09-01T12:00:00.000000",
+    "node_count": 6,
+    "nodes": [
+        {
+            "name": "display_left",
+            "namespace": "/",
+            "localhost_only": false,
+            "publishers": [
+                {
+                    "name": "/hardware_interface",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "subscribers": [
+                {
+                    "name": "/display_left",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "services": [],
+            "clients": []
+        },
+        {
+            "name": "display_right",
+            "namespace": "/",
+            "localhost_only": false,
+            "publishers": [
+                {
+                    "name": "/hardware_interface",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "subscribers": [
+                {
+                    "name": "/display_right",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "services": [],
+            "clients": []
+        },
+        {
+            "name": "display_bottom",
+            "namespace": "/",
+            "localhost_only": false,
+            "publishers": [
+                {
+                    "name": "/hardware_interface",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "subscribers": [
+                {
+                    "name": "/display_bottom",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "services": [],
+            "clients": []
+        },
+        {
+            "name": "motor",
+            "namespace": "/",
+            "localhost_only": false,
+            "publishers": [
+                {
+                    "name": "/hardware_interface",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "subscribers": [
+                {
+                    "name": "/motor",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "services": [],
+            "clients": []
+        },
+        {
+            "name": "hardware_interface",
+            "namespace": "/",
+            "localhost_only": false,
+            "publishers": [
+                {
+                    "name": "/manager",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "subscribers": [
+                {
+                    "name": "/hardware_interface",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "services": [],
+            "clients": []
+        },
+        {
+            "name": "display_manager",
+            "namespace": "/",
+            "localhost_only": false,
+            "publishers": [
+                {
+                    "name": "/display_left",
+                    "type": "std_msgs/msg/Empty"
+                },
+                {
+                    "name": "/display_right",
+                    "type": "std_msgs/msg/Empty"
+                },
+                {
+                    "name": "/display_bottom",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "subscribers": [
+                {
+                    "name": "/manager",
+                    "type": "std_msgs/msg/Empty"
+                }
+            ],
+            "services": [],
+            "clients": []
+        }
+    ]
+}

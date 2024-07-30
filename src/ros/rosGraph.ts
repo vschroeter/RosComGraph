@@ -937,7 +937,6 @@ export class RosGraphData {
     }
 
     const links: GraphLayoutLink[] = []
-    console.log()
     this.topicGraph.forEachLink((link) => {
       links.push(
         new RosGraphLayoutLink(
