@@ -75,17 +75,29 @@
                         <div class="col-auto q-ma-sm self-center">
                             <q-file v-model="uploadedFile" label="Upload JSON file" color="primary" accept=".json" />
                         </div>
-                        <div class="col-auto q-ma-sm self-center">
+                        <div v-if="false" class="col-auto q-ma-sm self-center">
                             <q-btn color="primary" label="Download as JSON" rounded @click="downloadJson()" />
                         </div>
+
+                        <div class="col-auto q-ma-sm self-center">
+                            <!-- q-button linked to https://github.com/vschroeter/rosmetasys-datasets in a new window -->
+                            <q-btn color="primary" rounded
+                                href="https://github.com/vschroeter/rosmetasys-datasets" target="_blank">
+                                Share your dataset <q-icon class="superscript-icon" name="open_in_new" />
+                            </q-btn>
+
+                        </div>
+
+
 
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-auto self-center" v-if="showWsInput">
+        <div class=" col-auto self-center" v-if="showWsInput">
             <div class="col-auto q-mt-sm self-center">
-                <q-input filled error-message="Enter valid websocket URL" :error="!checkWsUrl()" v-model="wsUrl"
+                <q-input filled error-message="Enter valid websocket URL" :error="!checkWsUrl()"
+                    v-model="wsUrl"
                     label="Websocket URL" @blur="updateUrl()" @keyup.enter="updateUrl()" />
             </div>
         </div>
@@ -102,11 +114,13 @@
             <svg ref="refMainSvg" width="100%" height="40vh" :viewBox="viewBox">
                 <g :ref="interactiveRef.ref">
                     <force-directed-graph v-if="false" ref="refFDG" :nodes="rosStore.nodes"
-                        :selectedNode="rosStore.selectedNode?.key" :hovered-node="rosStore.hoveredNode?.key"
+                        :selectedNode="rosStore.selectedNode?.key"
+                        :hovered-node="rosStore.hoveredNode?.key"
                         @selectedNode="(n) => rosStore.selectedNode = rosStore.getNode(n)!"
                         @hoveredNode="(n) => rosStore.hoveredNode = (n ? rosStore.getNode(n)! : null)" />
 
-                    <CircularView v-if="true" ref="refCV" :nodes="rosStore.nodes" name="LeftCV" :outer-radius="150"
+                    <CircularView v-if="true" ref="refCV" :nodes="rosStore.nodes" name="LeftCV"
+                        :outer-radius="150"
                         :graph-sorting="'flow'" :start-angle-offset="-90" :strokeWidthPubSub="4"
                         :stroke-width-service="3"
                         :marker-width="2" :marker-height="2" :selectedNode="rosStore.selectedNode?.key"
@@ -123,7 +137,8 @@
         <div class="col-auto q-mx-lg q-my-sm">
             <p class="text-center">Node Sorting Method</p>
             <div class="col-auto q-mx-lg">
-                <q-radio v-for="option in sortingOptions" :key="option.value" v-model="rosStore.nodeSorting"
+                <q-radio v-for="option in sortingOptions" :key="option.value"
+                    v-model="rosStore.nodeSorting"
                     :val="option.value" :label="option.label">
                     <q-tooltip :delay="500">{{ option.tooltip }}</q-tooltip>
                 </q-radio>
@@ -147,7 +162,8 @@
 
             <q-item tag="label" v-ripple>
                 <q-item-section avatar>
-                    <q-toggle v-model="rosStore.showPubSubConnections" color="var(---q-stroke-pubsub)" />
+                    <q-toggle v-model="rosStore.showPubSubConnections"
+                        color="var(---q-stroke-pubsub)" />
                 </q-item-section>
                 <q-item-section>
                     <q-item-label>Show publisher / subscriber connections</q-item-label>
@@ -155,18 +171,21 @@
             </q-item>
             <q-item tag="label" v-ripple>
                 <q-item-section avatar>
-                    <q-toggle v-model="rosStore.showBroadcastConnections" color="var(---q-stroke-service)" />
+                    <q-toggle v-model="rosStore.showBroadcastConnections"
+                        color="var(---q-stroke-service)" />
                 </q-item-section>
                 <q-item-section>
                     <q-item-label>Show broadcast connections</q-item-label>
-                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes and subscribes
+                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes
+                        and subscribes
                         to
                         simultaneously.</q-item-label>
                 </q-item-section>
             </q-item>
             <q-item tag="label" v-ripple>
                 <q-item-section avatar>
-                    <q-toggle v-model="rosStore.showServiceClientConnections" color="$test" keep-color />
+                    <q-toggle v-model="rosStore.showServiceClientConnections" color="$test"
+                        keep-color />
                 </q-item-section>
                 <q-item-section>
                     <q-item-label>Show service / client connections</q-item-label>
@@ -185,7 +204,8 @@
                     <q-toggle v-model="rosStore.componentsUsePubSubConnections" />
                 </q-item-section>
                 <q-item-section>
-                    <q-item-label>Use publisher / subscriber connections for connected components</q-item-label>
+                    <q-item-label>Use publisher / subscriber connections for connected
+                        components</q-item-label>
                 </q-item-section>
             </q-item>
             <q-item tag="label" v-ripple>
@@ -194,7 +214,8 @@
                 </q-item-section>
                 <q-item-section>
                     <q-item-label>Use broadcast connections for connected components</q-item-label>
-                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes and subscribes
+                    <q-item-label caption>'Broadcast connections' are topics that a node both publishes
+                        and subscribes
                         to
                         simultaneously.</q-item-label>
                 </q-item-section>
@@ -204,7 +225,8 @@
                     <q-toggle v-model="rosStore.componentsUseServiceClientConnections" />
                 </q-item-section>
                 <q-item-section>
-                    <q-item-label>Use service / client connections for connected components</q-item-label>
+                    <q-item-label>Use service / client connections for connected
+                        components</q-item-label>
                 </q-item-section>
             </q-item>
 
@@ -362,5 +384,11 @@ function setVisMode(mode: string, showWs: boolean = false) {
 
 .text-test {
     color: var(--q-stroke-service)
+}
+
+.superscript-icon {
+    font-size: 0.9em;
+    transform: translateY(-0.5em);
+    margin-left: 0.2em;
 }
 </style>
