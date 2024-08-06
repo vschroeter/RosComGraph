@@ -43,7 +43,7 @@ export const useRosStore = defineStore('ros', {
 
         visibleSubgroups: new Set() as Set<string>,
 
-        showLocalHostNodes: useStorage("showLocalHostNodes", true as boolean),
+        showLocalHostNodes: useStorage("showLocalHostNodes", false as boolean),
 
         wsUrl: useStorage("wsUrl", "ws://localhost:9090"),
 
