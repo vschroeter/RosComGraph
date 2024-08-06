@@ -165,17 +165,22 @@ export class Node {
   topicsMap: Map<string, Topic[]> = new Map()
   topicGroups: Map<TopicType, TopicGroup> = new Map()
 
+  localhost_only: boolean
+
   constructor({
     name,
     namespace,
     topics = [],
+    localhost_only = false
   }: {
     name: string,
     namespace: string,
     topics?: Topic[],
+    localhost_only?: boolean
   }) {
     this.name = name
     this.namespace = namespace
+    this.localhost_only = localhost_only
 
     topicTypes.forEach(topicType => {
       this.topicGroups.set(topicType, new TopicGroup(topicType, []))
@@ -187,7 +192,12 @@ export class Node {
   get key(): string {
     // return this._name;
     // return this.namespace + "/" + this.name;
-    return this.namespace != "/" ? (this.namespace + "/" + this.name) : this.name;
+    // return this.namespace != "/" ? (this.namespace + "/" + this.name) : this.name;
+    let key = this.namespace != "/" ? (this.namespace + "/" + this.name) : this.name;
+    if (this.localhost_only) {
+      key = "local/" + key
+    }
+    return key
   }
 
   addTopic(topic: Topic) {
@@ -239,7 +249,7 @@ export function getSimulatedNodes(data: {
       type: string
     }[]
   }[]
-} | undefined = undefined): Node[] {
+} | undefined = undefined, showLocalHostOnly: boolean = false): Node[] {
 
   if (data) {
     // console.log("DATA", data)
@@ -266,8 +276,9 @@ export function getSimulatedNodes(data: {
         name: node.name,
         namespace: node.namespace,
         topics: topics,
+        localhost_only: node.localhost_only,
       })
-    })
+    }).filter(node => (showLocalHostOnly && node.localhost_only) || (!showLocalHostOnly && !node.localhost_only))
   }
 
   const simNodes = [

@@ -16,10 +16,15 @@ import jsonNodesMany from 'src/data/rosVizData_many_nodes.json'
 import rosVizData_presentation from 'src/data/rosVizData_presentation.json'
 import rosVizData_motors from 'src/data/rosVizData_motors.json'
 import rosVizData_selfDrivingGitHub from 'src/data/rosVizData_selfDrivingGitHub.json'
+import test from 'src/data/0122nodes_2024-08-06_11-15-18_singulate.json'
+
 import { computed, ref, watch } from 'vue'
 
 
 const rosStore = useRosStore()
+
+rosStore.visMode = 'Saved data (Table Robot | 8 nodes)'
+rosStore.visJsonData = jsonNodes8;
 
 // const rosConnection = new RosConnection({
 //   websocketUrl: 'ws://192.168.0.216:9091'
@@ -203,12 +208,14 @@ watch([() => rosStore.visMode, () => rosStore.update, () => rosInfo], () => {
   } else if (rosStore.visMode === 'Example data (Self-driving car | 7 nodes)') {
     // rosStore.nodes = ROS.getSimulatedNodes(rosVizData_selfDrivingGitHub);
     rosStore.visJsonData = rosVizData_selfDrivingGitHub;
+  } else if (rosStore.visMode === 'Test') {
+    rosStore.visJsonData = test;
   }
 }, { immediate: true })
 
-watch(() => rosStore.visJsonData, () => {
+watch([() => rosStore.visJsonData, () => rosStore.showLocalHostNodes], () => {
   if (rosStore.visJsonData) {
-    rosStore.nodes = ROS.getSimulatedNodes(rosStore.visJsonData);
+    rosStore.nodes = ROS.getSimulatedNodes(rosStore.visJsonData, rosStore.showLocalHostNodes);
   }
 }, { immediate: true })
 

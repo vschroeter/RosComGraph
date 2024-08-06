@@ -59,6 +59,12 @@
                                         <q-item-label>Example data (Self-driving car | 7 nodes)</q-item-label>
                                     </q-item-section>
                                 </q-item>
+                                <q-item v-if="false" clickable v-close-popup
+                                    @click="setVisMode('Test', false)">
+                                    <q-item-section>
+                                        <q-item-label>Test</q-item-label>
+                                    </q-item-section>
+                                </q-item>
 
                                 <!-- <q-item clickable v-close-popup @click="setVisMode('Show presentation data', false)">
                                     <q-item-section>
@@ -236,6 +242,15 @@
 
         <div class="col-auto q-mx-lg q-my-sm">
             <p class="text-center">Visible Nodes</p>
+            <!-- Toggle for selecting local_host nodes or node -->
+            <q-item tag="label" v-ripple>
+                <q-item-section avatar>
+                    <q-toggle v-model="rosStore.showLocalHostNodes" />
+                </q-item-section>
+                <q-item-section>
+                    <q-item-label>Show nodes that are started with ROS_LOCALHOST_ONLY</q-item-label>
+                </q-item-section>
+            </q-item>
             <NodeList />
         </div>
 

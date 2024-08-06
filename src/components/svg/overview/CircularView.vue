@@ -359,7 +359,15 @@ const connectedGapAngle = computed(() => nodesGapAngle.value * props.connectedGa
 /** Mapping node keys to the assigned angle in the circle */
 const angleMap: Ref<Map<string, Ref<number>>> = ref(new Map());
 watch([() => connectionComponents.value, () => connectedGapAngle.value, () => startAngle.value], () => {
-    console.log("Update angle map")
+    // console.log("Update angle map", {
+    //     connectionComponents: connectionComponents.value,
+    //     connectedGapAngle: connectedGapAngle.value,
+    //     startAngle: startAngle.value,
+    //     nodesGapAngle: nodesGapAngle.value,
+    //     restAngle: restAngle.value,
+    //     countNodes: countNodes.value,
+    //     countConnectedComponents: countConnectedComponents.value,
+    // })
 
     const newAngleMap = new Map<string, Ref<number>>()
     const angleChangeValue = ref(0)
@@ -388,6 +396,7 @@ watch([() => connectionComponents.value, () => connectedGapAngle.value, () => st
 
     // angleMap.value.map((v, k) => [k, v.value])
     // console.table(Array.from(angleMap.value.entries()).map(([k, v]) => [k, v.value]))
+    // console.log("Finished update angle map")
 }, { immediate: true })
 
 const nodesSortedByAngle = computed(() => {
@@ -402,6 +411,7 @@ const positionMap = ref<Map<string, ComputedRef<Point2D>>>(new Map())
 
 watch([() => angleMap.value], () => {
 
+    // console.log("Update position map")
     const newPositions = new Map<string, ComputedRef<Point2D>>()
 
     for (const [key, angle] of angleMap.value.entries()) {
@@ -409,12 +419,14 @@ watch([() => angleMap.value], () => {
     }
     positionMap.value = newPositions
 
+    // console.log("Finished update position map")
 }, { immediate: true })
 
 /**
  * The line data to draw between the nodes
  */
 const connectionLines = computed(() => {
+    // console.log("Update connection lines")
     const lines: ComputedRef<LineData>[] = []
     // console.log("Update connection lines")
 
@@ -632,7 +644,7 @@ const connectionLines = computed(() => {
         }
 
     }
-    // console.log("Lines", lines)
+    // console.log("Update connection lines finished")
     return lines
 })
 
