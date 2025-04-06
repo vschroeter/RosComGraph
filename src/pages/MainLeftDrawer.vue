@@ -18,9 +18,16 @@
                                 </q-item>
 
                                 <q-item clickable v-close-popup
-                                    @click="setVisMode('Uploaded data', false)">
+                                    @click="setVisMode('Uploaded Data', false)">
                                     <q-item-section>
-                                        <q-item-label>Uploaded data</q-item-label>
+                                        <q-item-label>Uploaded Data</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Saved data (Self-driving car | 7 nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Saved data (Self-driving car | 7 nodes)</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
@@ -28,6 +35,21 @@
                                     @click="setVisMode('Saved data (Table Robot | 8 nodes)', false)">
                                     <q-item-section>
                                         <q-item-label>Saved data (Table Robot | 8 nodes)</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Example data (Broadcast Characteristic | 12 nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Example data (Broadcast Characteristic | 12 nodes)</q-item-label>
+                                    </q-item-section>
+                                </q-item>
+
+                                <q-item clickable v-close-popup
+                                    @click="setVisMode('Example data (Autonomous Driving derived from Autoware | 13 nodes)', false)">
+                                    <q-item-section>
+                                        <q-item-label>Example data (Autonomous Driving derived from Autoware | 13
+                                            nodes)</q-item-label>
                                     </q-item-section>
                                 </q-item>
 
@@ -45,20 +67,8 @@
                                     </q-item-section>
                                 </q-item>
 
-                                <q-item clickable v-close-popup
-                                    @click="setVisMode('Example data (Autonomous Driving derived from Autoware | 13 nodes)', false)">
-                                    <q-item-section>
-                                        <q-item-label>Example data (Autonomous Driving derived from Autoware | 13
-                                            nodes)</q-item-label>
-                                    </q-item-section>
-                                </q-item>
 
-                                <q-item clickable v-close-popup
-                                    @click="setVisMode('Example data (Self-driving car | 7 nodes)', false)">
-                                    <q-item-section>
-                                        <q-item-label>Example data (Self-driving car | 7 nodes)</q-item-label>
-                                    </q-item-section>
-                                </q-item>
+
                                 <q-item v-if="false" clickable v-close-popup
                                     @click="setVisMode('Test', false)">
                                     <q-item-section>
@@ -271,7 +281,7 @@ import ForceDirectedGraph from 'src/components/svg/overview/ForceDirectedGraph.v
 import CircularView from 'src/components/svg/overview/CircularView.vue';
 import NodeList from 'src/components/NodeList.vue';
 import CircleViewSettings from 'src/components/CircleViewSettings.vue';
-import { useRosStore } from 'stores/ros'
+import { useRosStore, type visMode } from 'stores/ros'
 import { svgInteractiveRef, useViewBoxGetter } from 'src/components/svg/scripts/directives';
 import { useStorage } from '@vueuse/core';
 
@@ -380,11 +390,11 @@ const sortingOptions = [
 
 const showWsInput = ref(false);
 
-function setVisMode(mode: string, showWs: boolean = false) {
+function setVisMode(mode: visMode, showWs: boolean = false) {
     rosStore.visMode = mode;
     showWsInput.value = showWs;
 
-    if (mode == "Uploaded data") {
+    if (mode == "Uploaded Data") {
         if (uploadedData.value) rosStore.visJsonData = uploadedData.value;
     }
 }

@@ -7,7 +7,10 @@ import { computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { RosSystemInfo } from 'src/ros/rosSystemInfo'
 
-type visMode = "Show live data" | "Uploaded Data" | "Saved data (Table Robot | 8 nodes)" | "Saved data (Table Robot | 21 nodes)" | "Saved data (Table Robot | 26 nodes)" | "Show presentation data" | "Example data (Autonomous Driving derived from Autoware | 13 nodes)" | "Example data (Self-driving car | 7 nodes)"
+export type visMode = "Show live data" | "Uploaded Data" |
+    "Uploaded Data" | "Saved data (Table Robot | 8 nodes)" | "Saved data (Table Robot | 21 nodes)" | "Saved data (Table Robot | 26 nodes)" |
+    "Show presentation data" | "Example data (Autonomous Driving derived from Autoware | 13 nodes)" |
+    "Saved data (Motor Controller | 13 nodes)" | "Saved data (Self-driving car | 7 nodes)" | "Example data (Broadcast Characteristic | 12 nodes)" | 'Test'
 
 let topicTimeout: NodeJS.Timeout | null = null;
 
@@ -15,7 +18,7 @@ export const useRosStore = defineStore('ros', {
     state: () => ({
         systemInfoConnection: null as RosSystemInfo | null,
         // visMode: useStorage("visMode", "Show live data") as visMode,
-        visMode: useStorage("visMode", "Show live data" as visMode),
+        visMode: useStorage("visMode", "Show live data" as visMode) as unknown as visMode,
         visJsonData: useStorage("visJsonData", null as any),
         autoUpdates: useStorage("autoUpdates", true as boolean),
         update: 0 as number,
